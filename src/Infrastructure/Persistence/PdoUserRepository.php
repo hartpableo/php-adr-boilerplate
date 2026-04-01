@@ -10,9 +10,9 @@ final class PdoUserRepository implements UserRepository {
   }
 
   public function findAll(): array {
-    $stmt = $this->pdo->query('SELECT id, name, email FROM users');
+    $stmt = $this->pdo->query('SELECT id, name FROM users');
     return array_map(
-      fn(array $row) => new UserEntity($row['id'], $row['name'], $row['email']),
+      fn(array $row) => new UserEntity($row['id'], $row['name']),
       $stmt->fetchAll(\PDO::FETCH_ASSOC)
     );
   }
@@ -21,13 +21,13 @@ final class PdoUserRepository implements UserRepository {
     $stmt = $this->pdo->prepare('SELECT id, name, email FROM users WHERE id = ?');
     $stmt->execute([$id]);
     $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-    return $row ? new UserEntity($row['id'], $row['name'], $row['email']) : NULL;
+    return $row ? new UserEntity($row['id'], $row['name']) : NULL;
   }
 
   public function save(UserEntity $user): UserEntity {
-    $stmt = $this->pdo->prepare('INSERT INTO users (name, email) VALUES (?, ?)');
-    $stmt->execute([$user->name, $user->email]);
-    return new UserEntity((int)$this->pdo->lastInsertId(), $user->name, $user->email);
+    $stmt = $this->pdo->prepare('INSERT INTO users (name) VALUES (?, ?)');
+    $stmt->execute([$user->name]);
+    return new UserEntity((int)$this->pdo->lastInsertId(), $user->name);
   }
 
   public function delete(int $id): void {

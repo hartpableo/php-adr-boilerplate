@@ -12,8 +12,17 @@ use App\Responder\UserResponder;
 $dotenv = Dotenv\Dotenv::createImmutable(realpath(__DIR__ . '/../'), '.env.local');
 $dotenv->load();
 
-// Primitive DI — swap for a real container in production
-$pdo = new \PDO('sqlite::memory:');
+// PDO connection
+$pdo = new \PDO(
+  env('db.dsn'),
+  env('db.username'),
+  env('db.password'),
+  [
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+  ]
+);
+
 $repo = new PdoUserRepository($pdo);
 $service = new UserService($repo);
 $responder = new UserResponder();
