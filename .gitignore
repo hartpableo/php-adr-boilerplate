@@ -1,0 +1,11 @@
+.ddev/*
+!.ddev/config.yaml
+node_modules
+public/uploads/*
+!public/uploads/.gitignore
+.env.local
+env.local.php
+.editorconfig
+.idea
+public/files/*
+!public/files/.gitkeep
