@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+
+if (php_sapi_name() !== 'cli') {
+  die('Not Allowed');
+}
+
+$cacheDir = __DIR__ . '/../var/cache/twig';
+
+$files = new RecursiveIteratorIterator(
+  new RecursiveDirectoryIterator($cacheDir, FilesystemIterator::SKIP_DOTS),
+  RecursiveIteratorIterator::CHILD_FIRST
+);
+
+foreach ($files as $file) {
+  $file->isDir() ? rmdir($file->getRealPath()) : unlink($file->getRealPath());
+}
+
+echo "Twig cache cleared.\n";

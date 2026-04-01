@@ -2,14 +2,18 @@
 
 namespace App\Responder;
 
-use App\Core\JsonResponse;
+use App\Core\TwigResponse;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 final class UserResponder {
+  /**
+   * @throws RuntimeError
+   * @throws SyntaxError
+   * @throws LoaderError
+   */
   public function __invoke(array $users): void {
-    new JsonResponse([
-      'ok' => TRUE,
-      'message' => 'Users fetched successfully',
-      'users' => []
-    ]);
+    new TwigResponse('users/list', ['users' => $users]);
   }
 }

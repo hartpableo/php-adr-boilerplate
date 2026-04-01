@@ -4,8 +4,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/functions.php';
 
 use App\Action\User\ListUsersAction;
+use App\Core\TwigResponse;
 use App\Domain\User\UserService;
 use App\Infrastructure\Persistence\PdoUserRepository;
+use App\Infrastructure\Factory\TwigFactory;
 use App\Responder\UserResponder;
 use FastRoute\RouteCollector;
 
@@ -23,6 +25,9 @@ $pdo = new \PDO(
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
   ]
 );
+
+// Twig
+TwigResponse::setTwig(TwigFactory::create());
 
 // Router
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($pdo) {

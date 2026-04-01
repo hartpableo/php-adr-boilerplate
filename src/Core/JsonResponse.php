@@ -4,7 +4,7 @@ namespace App\Core;
 
 use JsonException;
 
-class JsonResponse {
+final class JsonResponse {
   private mixed $data;
   private int $statusCode;
   /** @var array<string, string> */

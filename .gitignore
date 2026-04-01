@@ -9,3 +9,5 @@ env.local.php
 .idea
 public/files/*
 !public/files/.gitkeep
+var/cache/**/*
+!var/cache/.gitkeep
