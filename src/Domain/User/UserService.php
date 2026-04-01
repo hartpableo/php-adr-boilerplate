@@ -2,9 +2,9 @@
 
 namespace App\Domain\User;
 
-final class UserService {
+final readonly class UserService {
   public function __construct(
-    private readonly UserRepository $repository,
+    private UserRepository $repository,
   ) {
   }
 

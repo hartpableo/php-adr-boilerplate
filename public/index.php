@@ -7,6 +7,7 @@ use App\Action\User\ListUsersAction;
 use App\Domain\User\UserService;
 use App\Infrastructure\Persistence\PdoUserRepository;
 use App\Responder\UserResponder;
+use FastRoute\RouteCollector;
 
 // Load environment variables
 $dotenv = Dotenv\Dotenv::createImmutable(realpath(__DIR__ . '/../'), '.env.local');
@@ -23,18 +24,28 @@ $pdo = new \PDO(
   ]
 );
 
-$repo = new PdoUserRepository($pdo);
-$service = new UserService($repo);
-$responder = new UserResponder();
-$action = new ListUsersAction($service, $responder);
+// Router
+$dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($pdo) {
+  $r->get('/users', new ListUsersAction(
+    new UserService(new PdoUserRepository($pdo)),
+    new UserResponder()
+  ));
+});
 
-// Rudimentary router
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$method = $_SERVER['REQUEST_METHOD'];
+// Dispatch
+$routeInfo = $dispatcher->dispatch(
+  $_SERVER['REQUEST_METHOD'],
+  parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
+);
 
-if ($path === '/users' && $method === 'GET') {
-  $action($_SERVER, $_GET, $_POST);
-} else {
-  http_response_code(404);
-  echo '404 Not found';
-}
+match ($routeInfo[0]) {
+  FastRoute\Dispatcher::FOUND => ($routeInfo[1])($_SERVER, $_GET, $_POST),
+  FastRoute\Dispatcher::NOT_FOUND => (function () {
+    http_response_code(404);
+    echo '404 Not found';
+  })(),
+  FastRoute\Dispatcher::METHOD_NOT_ALLOWED => (function () {
+    http_response_code(405);
+    echo '405 Method not allowed';
+  })(),
+};
