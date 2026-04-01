@@ -1,0 +1,74 @@
+#!/usr/bin/env php
+<?php
+
+use App\Utility\Console;
+
+if (php_sapi_name() !== 'cli') {
+  die('Not allowed');
+}
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../src/functions.php';
+
+// Load environment variables
+$dotenv = Dotenv\Dotenv::createImmutable(rootDir(), '.env.local');
+$dotenv->load();
+
+$pdo = new \PDO(
+  env('db.dsn'),
+  env('db.username'),
+  env('db.password'),
+  [
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+  ]
+);
+
+$params = cliParseParams($argv);
+$args = $params['args'];
+//$options = $params['options'];
+
+$entity = $args[0] ?? null;
+if (empty($entity)) {
+  Console::error('No entity specified.');
+  exit(1);
+}
+
+$entityExists = FALSE;
+// TODO: Do not rely on glob, maybe use the entity classes
+$sqlFiles = glob(rootDir('/migrations/*.create_*_table.sql'));
+
+foreach ($sqlFiles as $file) {
+  $file = basename($file);
+  $name = str_replace('.sql', '', $file);
+  $name = explode('.', $name)[1] ?? NULL;
+  if (!empty($name)) {
+    $name = str_replace(['_table', 'create_'], '', $name);
+    if ($name !== $entity) {
+      continue;
+    }
+
+    $entityExists = TRUE;
+  }
+}
+
+if (!$entityExists) {
+  Console::error("Entity: {$entity} does not exist.");
+  exit(1);
+}
+
+Console::info("Entity: {$entity}");
+
+$columns = $pdo->query("SHOW COLUMNS FROM {$entity}")->fetchAll();
+if (empty($columns)) {
+  Console::error("Entity: {$entity} does not exist. No columns found.");
+  exit(1);
+}
+
+$columns = array_map(fn($column) => [
+  'name' => $column['Field'],
+  'type' => $column['Type'],
+  'required' => strtolower($column['Null']) === 'no' ? 'Yes' : 'No',
+], $columns);
+
+Console::table($columns);

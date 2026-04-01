@@ -1,0 +1,95 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Execute migrations
+ */
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../src/functions.php';
+
+if (php_sapi_name() !== 'cli') {
+  die('Not allowed');
+}
+
+// Load environment variables
+$dotenv = Dotenv\Dotenv::createImmutable(rootDir(), '.env.local');
+$dotenv->load();
+
+$pdo = new \PDO(
+  env('db.dsn'),
+  env('db.username'),
+  env('db.password'),
+  [
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+  ]
+);
+
+// Create the migrations table if not exists
+$pdo->exec("
+  CREATE TABLE IF NOT EXISTS migrations (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      migration VARCHAR(255) NOT NULL,
+      UNIQUE KEY unique_migration (migration)
+  )
+");
+
+// Get all applied migrations
+$applied = $pdo->query("SELECT migration FROM migrations")->fetchAll();
+$applied = array_column($applied, 'migration');
+
+// Get migration files
+$migrationFiles = glob(rootDir('migrations/*'), GLOB_BRACE);
+sort($migrationFiles);
+
+foreach ($migrationFiles as $migrationFile) {
+  $name = basename($migrationFile);
+
+  if (!in_array($name, $applied)) {
+    echo "Running $name\n";
+
+    // Execute SQL or PHP scripts
+    if (str_ends_with($migrationFile, '.sql')) {
+      $pdo->exec(file_get_contents($migrationFile));
+    } else {
+      // Ensure the file is a PHP executable
+      $fh = fopen($migrationFile, 'rb');
+      $firstLine = $fh ? fgets($fh) : false;
+      if ($fh) {
+        fclose($fh);
+      }
+
+      // Move to the next item in the loop if it's not a PHP executable
+      if (!str_contains($firstLine, '#!/usr/bin/env php')) {
+        continue;
+      }
+
+      echo "\n";
+      echo "=================\n";
+      echo "Running PHP executable: {$name}\n";
+      echo "\n";
+
+      exec("php migrations/{$name}", $output, $return);
+      if ($return !== 0) {
+        echo "Error running migration: {$migrationFile}\n";
+        echo implode("\n", $output) . PHP_EOL;
+        exit(1);
+      }
+
+      echo implode("\n", $output) . PHP_EOL;
+      echo "\n";
+      echo "=================\n";
+    }
+
+    // Record migration
+    $stmt = $pdo->prepare("INSERT INTO migrations (migration) VALUES (:mig)");
+    $stmt->execute(['mig' => $name]);
+
+    echo "Migrated: {$name}\n\n";
+  } else {
+    echo "The migration {$name} has already been applied\n\n";
+  }
+}
+
+echo "Migration is done!\n";
+

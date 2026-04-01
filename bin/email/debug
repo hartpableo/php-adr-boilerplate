@@ -1,0 +1,31 @@
+#!//usr/bin/env php
+<?php
+
+use App\Core\Console;
+
+if (php_sapi_name() !== 'cli') {
+  die('Not Allowed');
+}
+
+require_once __DIR__ . '/../../src/config.php';
+
+$mailer = new \App\Core\Mailer();
+$mailer->setFrom('admin@hartapps.site', 'HartApps Admin');
+$mailer->addAddress('pableoh@gmail.com', 'Hart (Personal)');
+$mailer->addReplyTo('admin@hartapps.site', 'HartApps Admin');
+$mailer->addCC('cc@hartapps.site');
+$mailer->Subject = 'Test Email from Pet Clinic System';
+$mailer->Body = <<<HTML
+  <div style="font-family: sans-serif;">
+    <h1>Hello! This is a test email...</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum deserunt dignissimos explicabo nemo numquam repudiandae ullam. Assumenda exercitationem expedita voluptas?</p>
+  </div>
+HTML;
+$mailer->AltBody = "Hello! This is a test email...\nLorem ipsum dolor sit amet, consectetur adipisicing elit. Cum deserunt dignissimos explicabo nemo numquam repudiandae ullam. Assumenda exercitationem expedita voluptas?";
+$sent = $mailer->send();
+if (!$sent) {
+  Console::error('Error sending email');
+  exit(1);
+}
+
+Console::success('Email sent successfully');

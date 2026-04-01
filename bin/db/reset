@@ -1,0 +1,52 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Reset database
+ */
+
+if (php_sapi_name() !== 'cli') {
+  die('Not allowed');
+}
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../src/functions.php';
+
+// Load environment variables
+$dotenv = Dotenv\Dotenv::createImmutable(rootDir(), '.env.local');
+$dotenv->load();
+
+$pdo = new \PDO(
+  env('db.dsn'),
+  env('db.username'),
+  env('db.password'),
+  [
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+  ]
+);
+
+$pdo->exec("
+  SET FOREIGN_KEY_CHECKS = 0;
+");
+
+$tables = $pdo->query("SHOW TABLES")->fetchAll();
+foreach ($tables as $table) {
+  $tableName = array_values($table)[0];
+  $pdo->exec("DROP TABLE IF EXISTS `{$tableName}`");
+}
+
+$pdo->query("
+  SET FOREIGN_KEY_CHECKS = 1;
+");
+
+echo "Database has been reset\n\n";
+echo "Rerunning migration now...\n\n";
+
+exec('php bin/db/migrate', $output, $return_code);
+foreach ($output as $line) {
+  echo $line . PHP_EOL;
+}
+
+sleep(1);
+echo PHP_EOL;
+echo "Done\n";
