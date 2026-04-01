@@ -2,7 +2,7 @@
 
 namespace App\Responder;
 
-use App\Core\TwigResponse;
+use App\Responder\Utility\TwigResponse;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
