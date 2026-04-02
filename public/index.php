@@ -3,12 +3,18 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/functions.php';
 
+use App\Action\Page\HomePageAction;
 use App\Action\User\ListUsersAction;
+use App\Action\User\LoginAction;
+use App\Action\User\SignupAction;
 use App\Domain\User\UserService;
 use App\Infrastructure\Factory\TwigFactory;
 use App\Infrastructure\Persistence\PdoUserRepository;
+use App\Responder\LoginResponder;
+use App\Responder\PageResponder;
 use App\Responder\Utility\TwigResponse;
 use App\Responder\UserResponder;
+use App\Responder\SignupResponder;
 use FastRoute\RouteCollector;
 
 // Load environment variables
@@ -32,10 +38,32 @@ TwigResponse::setTwig(TwigFactory::create());
 // Router
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($pdo) {
   // Routes
+  $r->get('/', new HomePageAction(
+    new PageResponder()
+  ));
+
   $r->get('/users', new ListUsersAction(
     new UserService(new PdoUserRepository($pdo)),
     new UserResponder()
   ));
+
+  $r->addGroup('/signup', function (RouteCollector $r) use ($pdo) {
+    $action = new SignupAction(
+      new UserService(new PdoUserRepository($pdo)),
+      new SignupResponder()
+    );
+    $r->get('', $action);
+    $r->post('', $action);
+  });
+
+  $r->addGroup('/login', function (RouteCollector $r) use ($pdo) {
+    $action = new LoginAction(
+      new UserService(new PdoUserRepository($pdo)),
+      new LoginResponder()
+    );
+    $r->get('', $action);
+    $r->post('', $action);
+  });
 });
 
 // Dispatch
