@@ -13,13 +13,13 @@ final readonly class UserService {
     // Returns UserEntity[]
   }
 
-  public function create(string $name, string $email): UserEntity {
+  public function create(string $name): UserEntity {
     if (empty(trim($name))) {
       throw new \InvalidArgumentException('Name is required.');
     }
 
     // id is null until the repository assigns one
-    $user = new UserEntity(NULL, $name, $email);
+    $user = new UserEntity(NULL, $name);
     return $this->repository->save($user);
     // Returns a new UserEntity with the id populated
   }

@@ -26,7 +26,6 @@ $pdo = new \PDO(
 
 $params = cliParseParams($argv);
 $args = $params['args'];
-//$options = $params['options'];
 
 $entity = $args[0] ?? null;
 if (empty($entity)) {
@@ -34,26 +33,10 @@ if (empty($entity)) {
   exit(1);
 }
 
-$entityExists = FALSE;
-// TODO: Do not rely on glob, maybe use the entity classes
-$sqlFiles = glob(rootDir('/migrations/*.create_*_table.sql'));
-
-foreach ($sqlFiles as $file) {
-  $file = basename($file);
-  $name = str_replace('.sql', '', $file);
-  $name = explode('.', $name)[1] ?? NULL;
-  if (!empty($name)) {
-    $name = str_replace(['_table', 'create_'], '', $name);
-    if ($name !== $entity) {
-      continue;
-    }
-
-    $entityExists = TRUE;
-  }
-}
-
+$entityUcfirst = ucfirst($entity);
+$entityExists = class_exists("App\\Domain\\$entityUcfirst\\{$entityUcfirst}Entity");
 if (!$entityExists) {
-  Console::error("Entity: {$entity} does not exist.");
+  Console::error("Entity \"{$entityUcfirst}\" does not exist.");
   exit(1);
 }
 

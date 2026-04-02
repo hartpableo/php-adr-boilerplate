@@ -2,10 +2,10 @@
 
 namespace App\Domain\User;
 
-final class UserEntity {
+final readonly class UserEntity {
   public function __construct(
-    public readonly ?int   $id,
-    public readonly string $name,
+    public ?int   $id,
+    public string $name,
   ) {
   }
 }

@@ -31,6 +31,7 @@ TwigResponse::setTwig(TwigFactory::create());
 
 // Router
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($pdo) {
+  // Routes
   $r->get('/users', new ListUsersAction(
     new UserService(new PdoUserRepository($pdo)),
     new UserResponder()

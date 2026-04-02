@@ -1,5 +1,5 @@
--- Create the "users" table
-CREATE TABLE IF NOT EXISTS users (
+-- Create the "user" table
+CREATE TABLE IF NOT EXISTS user (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
