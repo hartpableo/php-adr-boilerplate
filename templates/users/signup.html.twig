@@ -10,6 +10,7 @@
   {% endif %}
 
   <form method="POST" action="/signup">
+    {{ csrf_token }}
     <div>
       <label for="name">Name:</label>
       <input type="text" id="name" name="name" value="{{ input.name }}" required>

@@ -10,6 +10,8 @@ use App\Action\User\SignupAction;
 use App\Domain\User\UserService;
 use App\Infrastructure\Factory\TwigFactory;
 use App\Infrastructure\Persistence\PdoUserRepository;
+use App\Infrastructure\Session\Flash;
+use App\Infrastructure\Session\RateLimiter;
 use App\Responder\LoginResponder;
 use App\Responder\PageResponder;
 use App\Responder\Utility\TwigResponse;
@@ -20,6 +22,12 @@ use FastRoute\RouteCollector;
 // Load environment variables
 $dotenv = Dotenv\Dotenv::createImmutable(realpath(__DIR__ . '/../'), '.env.local');
 $dotenv->load();
+
+// Start the session
+session_start();
+
+// Clear expired rate limiters
+RateLimiter::clearAllExpired();
 
 // PDO connection
 $pdo = new \PDO(
@@ -83,3 +91,6 @@ match ($routeInfo[0]) {
     echo '405 Method not allowed';
   })(),
 };
+
+// Clear flash messages
+Flash::clear();

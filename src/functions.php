@@ -1,5 +1,7 @@
 <?php
 
+use App\Infrastructure\Session\Session;
+
 /**
  * Get a .env variable
  */
@@ -13,6 +15,29 @@ function env(string $key, mixed $default = NULL): mixed {
  */
 function rootDir(string $path = ''): string {
   return realpath(__DIR__ . '/../') . DIRECTORY_SEPARATOR . ltrim($path, '/');
+}
+
+/**
+ * Get the base URL
+ */
+function baseUrl(string $request_uri = ''): string {
+  $request_uri = ltrim($request_uri, '/');
+  $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+  return "$protocol://$_SERVER[HTTP_HOST]" . (!empty($request_uri) ? "/$request_uri" : '');
+}
+
+/**
+ * Asset path
+ */
+function asset(
+  string $path,
+  bool   $version = TRUE,
+): string {
+  $path = ltrim($path, '/');
+
+  return $version
+    ? baseUrl("$path?v=" . filemtime(rootDir("public/{$path}")))
+    : baseUrl($path);
 }
 
 /**
@@ -79,4 +104,11 @@ function cliSetOption(array $options, string $key, mixed $value): array {
 
   $options[$key] = [$options[$key], $value];
   return $options;
+}
+
+/**
+ * Get current user
+ */
+function getUser(): mixed {
+  return Session::get('user') ?? NULL;
 }

@@ -10,6 +10,7 @@
   {% endif %}
 
   <form method="POST" action="/login">
+    {{ csrf_token }}
     <div>
       <label for="email">Email:</label>
       <input type="email" id="email" name="email" value="{{ input.email }}" required>
