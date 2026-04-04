@@ -1,6 +1,7 @@
 {
   "name": "hartpableo/php-adr",
   "description": "PHP base framework following the Action-Domain-Responder architecture",
+  "type": "project",
   "version": "1.0.0",
   "authors": [
     {

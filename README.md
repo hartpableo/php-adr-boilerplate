@@ -4,13 +4,28 @@ This is a PHP boilerplate following the Action-Domain-Responder (ADR) architectu
 
 ## Getting Started
 
-To create a new project using this boilerplate, run the following command in your terminal:
+To create a new project in a **new directory**, run:
 
 ```bash
 composer create-project hartpableo/php-adr my-project --repository='{"type":"vcs","url":"https://github.com/hartpableo/php-adr-boilerplate"}'
 ```
 
-*(Note: Replace `hartpableo/php-adr` and the URL with your actual private repository details if they differ.)*
+### Installing into an existing directory
+
+If you already have a directory and want to initialize it with this boilerplate:
+
+1. **Clean the directory** (or ensure it's empty).
+2. Run:
+   ```bash
+   composer create-project hartpableo/php-adr . --repository='{"type":"vcs","url":"https://github.com/hartpableo/php-adr.git"}'
+   ```
+3. Alternatively, if the directory is **not empty** (contains other files you want to keep), manually copy the files from the repository and run:
+   ```bash
+   composer install
+   ```
+   *(Wait for it to finish and it will automatically run the `post-create-project-cmd` scripts if you cloned it. If you manually copied it, you might need to run `composer run-script post-create-project-cmd` manually.)*
+
+> **Note**: `composer require` is **not recommended** for this boilerplate because it's a project skeleton, not a library. It defines the root structure (like `public/` and `src/`), which would be hidden in your `vendor/` folder if you "required" it.
 
 ### Prerequisites
 
