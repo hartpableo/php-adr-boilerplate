@@ -32,10 +32,11 @@ final class TwigFactory {
 
   private static function addFunctions(Environment $twig): void {
     $twig->addFunction(new TwigFunction('asset', 'asset'));
-    $twig->addFunction(new TwigFunction('env', function ($key) {
+    $twig->addFunction(new TwigFunction('env', 'env'));
+    $twig->addFunction(new TwigFunction('app_version', function () {
       return (env('app.env') ?? 'prod') !== 'prod'
         ? time()
-        : env($key);
+        : env('app.version');
     }));
   }
 
