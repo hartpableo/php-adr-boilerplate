@@ -7,7 +7,7 @@ This is a PHP boilerplate following the Action-Domain-Responder (ADR) architectu
 To create a new project in a **new directory**, run:
 
 ```bash
-composer create-project hartpableo/php-adr my-project --repository='{"type":"vcs","url":"https://github.com/hartpableo/php-adr.git"}'
+composer create-project hartpableo/php-adr my-project --repository='{"type":"vcs","url":"https://github.com/hartpableo/php-adr-boilerplate.git"}'
 ```
 
 ### Installing into an existing directory
@@ -17,7 +17,7 @@ If you already have a directory and want to initialize it with this boilerplate:
 1. **Clean the directory** (or ensure it's empty).
 2. Run:
    ```bash
-   composer create-project hartpableo/php-adr . --repository='{"type":"vcs","url":"https://github.com/hartpableo/php-adr.git"}'
+   composer create-project hartpableo/php-adr . --repository='{"type":"vcs","url":"https://github.com/hartpableo/php-adr-boilerplate.git"}'
    ```
 3. Alternatively, if the directory is **not empty** (contains other files you want to keep), manually copy the files from the repository and run:
    ```bash
@@ -32,7 +32,7 @@ If you already have a directory and want to initialize it with this boilerplate:
 Since there are releases available, you can also specify a version:
 
 ```bash
-composer create-project hartpableo/php-adr:^1.0 my-project --repository='{"type":"vcs","url":"https://github.com/hartpableo/php-adr.git"}'
+composer create-project hartpableo/php-adr:^1.0 my-project --repository='{"type":"vcs","url":"https://github.com/hartpableo/php-adr-boilerplate.git"}'
 ```
 
 *(Note: Replace `^1.0` with your desired version.)*
