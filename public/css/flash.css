@@ -1,0 +1,8 @@
+.messages {
+    z-index: 1050;
+}
+
+/* Ensure the alert content and button look good together */
+.alert__content {
+    margin-right: 2rem;
+}
