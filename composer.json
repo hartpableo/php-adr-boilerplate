@@ -31,7 +31,8 @@
       "php -r \"copy('.env.example', '.env.local');\"",
       "php -r \"if (!file_exists('var/cache')) mkdir('var/cache', 0777, true);\"",
       "php -r \"if (!file_exists('var/cache/twig')) mkdir('var/cache/twig', 0777, true);\"",
-      "php -r \"if (file_exists('.ddev/config.yaml')) { \\$config = file_get_contents('.ddev/config.yaml'); \\$name = basename(getcwd()); \\$config = preg_replace('/^name: .*/m', 'name: ' . \\$name, \\$config); file_put_contents('.ddev/config.yaml', \\$config); }\""
+      "php -r \"if (file_exists('.ddev/config.yaml')) { \\$config = file_get_contents('.ddev/config.yaml'); \\$name = basename(getcwd()); \\$config = preg_replace('/^name: .*/m', 'name: ' . \\$name, \\$config); file_put_contents('.ddev/config.yaml', \\$config); }\"",
+      "rm README.md"
     ]
   }
 }
