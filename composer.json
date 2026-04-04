@@ -18,5 +18,19 @@
     "nikic/fast-route": "^1.3",
     "twig/twig": "^3.24",
     "ext-pdo": "*"
+  },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    },
+    "process-timeout": 0,
+    "sort-packages": true
+  },
+  "scripts": {
+    "post-create-project-cmd": [
+      "php -r \"copy('.env.example', '.env.local');\"",
+      "php -r \"if (!file_exists('var/cache')) mkdir('var/cache', 0777, true);\"",
+      "php -r \"if (!file_exists('var/cache/twig')) mkdir('var/cache/twig', 0777, true);\""
+    ]
   }
 }
