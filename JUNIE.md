@@ -169,6 +169,8 @@ if ($path === '/users' && $method === 'GET') {
 
 ## Key PHP Conventions in This Codebase
 
+- Indentations: Use **2 spaces** for all files (PHP, Twig, JS, etc.).
+- Front-end design system uses Bootstrap 5.
 - PHP 8.1+ — use `readonly` properties, constructor property promotion, enums, and named arguments where appropriate.
 - Classes are `final` by default unless there is a clear reason for inheritance.
 - Repository interfaces live in the Domain, not Infrastructure.

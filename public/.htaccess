@@ -29,7 +29,7 @@
     Header set X-XSS-Protection "1; mode=block"
     Header set Referrer-Policy "strict-origin-when-cross-origin"
     Header set Permissions-Policy "geolocation=(), megaphone=(), camera=(), microphone=(), payment=()"
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; media-src 'self'; frame-src 'none';"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; font-src 'self' cdn.jsdelivr.net; object-src 'none'; media-src 'self'; frame-src 'none';"
 
     # Assets Cache
     <FilesMatch "\.(js|mjs|css|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$">
