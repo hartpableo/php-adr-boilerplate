@@ -3,6 +3,7 @@
 namespace App\Responder;
 
 use App\Infrastructure\Session\CsrfToken;
+use App\Infrastructure\Session\Flash;
 use App\Responder\Utility\TwigResponse;
 use Twig\Markup;
 
@@ -19,7 +20,7 @@ final class SignupResponder {
   }
 
   public function success(): void {
-    // todo: add flash message
+    Flash::add('success', 'You have successfully signed up.');
     header('Location: /login');
     exit;
   }

@@ -50,6 +50,10 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) use ($pdo)
     new PageResponder()
   ));
 
+  $r->get('/logout', new HomePageAction(
+    new PageResponder()
+  ));
+
   $r->get('/users', new ListUsersAction(
     new UserService(new PdoUserRepository($pdo)),
     new UserResponder()

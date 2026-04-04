@@ -1,6 +1,7 @@
 <?php
 
 use App\Infrastructure\Session\Session;
+use JetBrains\PhpStorm\NoReturn;
 
 /**
  * Get a .env variable
@@ -111,4 +112,17 @@ function cliSetOption(array $options, string $key, mixed $value): array {
  */
 function getUser(): mixed {
   return Session::get('user') ?? NULL;
+}
+
+/**
+ * Redirect to a URL
+ */
+#[NoReturn]
+function redirect(string $url, $params = []): void {
+  if (!empty($params)) {
+    $url .= '?' . http_build_query($params);
+  }
+
+  header("Location: {$url}");
+  exit;
 }
