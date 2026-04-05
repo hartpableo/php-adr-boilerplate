@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page Not Found | {{ env('app.name') }}{% endblock %}
+
+{% block body %}
+  <div class="row justify-content-center align-items-center py-5">
+    <div class="col-md-6 text-center">
+      <h1 class="display-1 fw-bold text-primary">404</h1>
+      <h2 class="mb-4">Page Not Found</h2>
+      <p class="lead mb-5 text-muted">The page you're looking for doesn't exist or has been moved.</p>
+      <a href="/" class="btn btn-primary btn-lg">Back to Home</a>
+    </div>
+  </div>
+{% endblock %}

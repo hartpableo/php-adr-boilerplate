@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Not Authorized | {{ env('app.name') }}{% endblock %}
+
+{% block body %}
+  <div class="row justify-content-center align-items-center py-5">
+    <div class="col-md-6 text-center">
+      <h1 class="display-1 fw-bold text-primary">403</h1>
+      <h2 class="mb-4">Not Authorized</h2>
+      <p class="lead mb-5 text-muted">You do not have permission to access this resource.</p>
+      <a href="/" class="btn btn-primary btn-lg">Back to Home</a>
+    </div>
+  </div>
+{% endblock %}

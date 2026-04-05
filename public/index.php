@@ -13,6 +13,8 @@ use App\Infrastructure\Persistence\PdoUserRepository;
 use App\Infrastructure\Session\Flash;
 use App\Infrastructure\Session\RateLimiter;
 use App\Responder\LoginResponder;
+use App\Responder\MethodNotAllowedResponder;
+use App\Responder\NotFoundResponder;
 use App\Responder\PageResponder;
 use App\Responder\Utility\TwigResponse;
 use App\Responder\UserResponder;
@@ -86,14 +88,8 @@ $routeInfo = $dispatcher->dispatch(
 
 match ($routeInfo[0]) {
   FastRoute\Dispatcher::FOUND => ($routeInfo[1])($_SERVER, $_GET, $_POST),
-  FastRoute\Dispatcher::NOT_FOUND => (function () {
-    http_response_code(404);
-    echo '404 Not found';
-  })(),
-  FastRoute\Dispatcher::METHOD_NOT_ALLOWED => (function () {
-    http_response_code(405);
-    echo '405 Method not allowed';
-  })(),
+  FastRoute\Dispatcher::NOT_FOUND => (new NotFoundResponder())(),
+  FastRoute\Dispatcher::METHOD_NOT_ALLOWED => (new MethodNotAllowedResponder())(),
 };
 
 // Clear flash messages
